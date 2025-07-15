@@ -2,19 +2,43 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
-  <title>FPS 3D - Sobrevivência e Mineração</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>FPS 3D - Toupeira Pet</title>
+  <style>
+    body, html { margin: 0; padding: 0; overflow: hidden; background: black; color: white; font-family: sans-serif; }
+    #hud {
+      position: absolute;
+      top: 10px; left: 10px;
+      background: rgba(0,0,0,0.5);
+      padding: 10px;
+      border-radius: 8px;
+      z-index: 10;
+    }
+    #hud div { margin-bottom: 4px; }
+    #barra-fome {
+      position: absolute;
+      top: 100px;
+      left: 10px;
+      width: 200px;
+      height: 15px;
+      background: #444;
+      border: 1px solid #fff;
+      z-index: 15;
+    }
+    #barra-fome-fill {
+      height: 100%;
+      background: orange;
+      width: 100%;
+    }
+  </style>
 </head>
 <body>
   <div id="hud">
     <div>❤️ Vida: <span id="vida">100</span></div>
-    <div>🍖 Fome: <span id="fome">100</span></div>
-    <div>⚡ Energia: <span id="energia">100</span></div>
-    <div>🕒 Hora: <span id="hora">06:00</span></div>
+    <div>🍗 Fome: <span id="fome">50</span></div>
+    <div>⚡ Energia: <span id="energia">75</span></div>
+    <div>🕒 Hora: <span id="hora">6:00 a.m.</span></div>
   </div>
-
-  <button id="startBtn">Iniciar Jogo</button>
-
-  <script type="module" src="main.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.157/build/three.min.js"></script>
+  <script src="main.js"></script>
 </body>
 </html>
