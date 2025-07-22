@@ -106,4 +106,21 @@ function generateMaze() {
       removeWalls(current,next);
       stack.push(next);
     } else {
-      s
+      stack.pop();
+    }
+  }
+}
+
+function drawMaze() {
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  mazeGrid.forEach(cell => cell.draw());
+}
+
+// Exportar para global (gameplay.js usa isso)
+window.mazeGrid = mazeGrid;
+window.cellSize = cellSize;
+window.cols = cols;
+window.rows = rows;
+window.drawMaze = drawMaze;
+window.setupMaze = setupMaze;
+window.generateMaze = generateMaze;
