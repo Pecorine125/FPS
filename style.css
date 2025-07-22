@@ -1,36 +1,52 @@
 body, html {
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  background: black;
-  color: white;
-  font-family: sans-serif;
+  margin:0; padding:0; background:#222; color:#fff; font-family: sans-serif; overflow: hidden;
 }
-
-#hud {
+#game {
+  position: relative;
+  width: 600px;
+  height: 600px;
+  background:#111;
+  border: 4px solid #0ff;
+  margin: 20px auto;
+  overflow: hidden;
+}
+#maze {
   position: absolute;
-  top: 10px; left: 10px;
-  background: rgba(0,0,0,0.5);
-  padding: 10px;
-  border-radius: 8px;
+  width: 500px;
+  height: 500px;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  border: 3px solid #0ff;
+  box-sizing: border-box;
+  background: #000a;
+}
+#player {
+  position: absolute;
+  width: 30px; height: 30px;
+  background: #4caf50;
+  border-radius: 50%;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events:none;
   z-index: 10;
 }
-
-#hud div { margin-bottom: 4px; }
-
-#barra-fome {
+.enemy {
   position: absolute;
-  top: 100px;
-  left: 10px;
-  width: 200px;
-  height: 15px;
-  background: #444;
-  border: 1px solid #fff;
-  z-index: 15;
+  width: 25px; height: 25px;
+  background: #e53935;
+  border-radius: 50%;
+  pointer-events:none;
 }
-
-#barra-fome-fill {
-  height: 100%;
-  background: orange;
-  width: 100%;
+.bullet {
+  position: absolute;
+  width: 10px; height: 10px;
+  background: #ffeb3b;
+  border-radius: 50%;
+  pointer-events:none;
+  z-index: 20;
+}
+#scoreboard {
+  text-align:center;
+  margin-top: 15px;
+  font-size: 20px;
 }
