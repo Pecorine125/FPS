@@ -1,9 +1,8 @@
-const cols = window.cols;
-const rows = window.rows;
-const cellSize = window.cellSize;
-const mazeGrid = window.mazeGrid;
-const drawMaze = window.drawMaze;
-
+cols = window.cols;
+rows = window.rows;
+cellSize = window.cellSize;
+mazeGrid = window.mazeGrid;
+drawMaze = window.drawMaze;
 
 const game = document.getElementById('game');
 const player = document.getElementById('player');
