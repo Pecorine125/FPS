@@ -2,6 +2,7 @@ const game = document.getElementById('game');
 const maze = document.getElementById('maze');
 const player = document.getElementById('player');
 const scoreboard = document.getElementById('scoreboard');
+const healthDisplay = document.getElementById('health');
 
 const mazeSize = 500;
 const playerPos = { x: mazeSize/2, y: mazeSize/2 };
@@ -10,8 +11,17 @@ let enemies = [];
 let bullets = [];
 let score = 0;
 
-// Spawn inimigos nas bordas do labirinto
+let playerLife = 100;
+
+let isShooting = false;
+let mousePos = {x: playerPos.x, y: playerPos.y};
+let shootInterval = null;
+const shootDelay = 200; // milissegundos entre tiros
+
+// Spawn inimigos nas bordas do labirinto, com delay maior e velocidade menor
 function spawnEnemy() {
+  if(enemies.length >= 10) return; // limita quantidade para não sobrecarregar
+
   const enemy = document.createElement('div');
   enemy.classList.add('enemy');
 
@@ -37,12 +47,12 @@ function spawnEnemy() {
   enemy.style.top = y + 'px';
   maze.appendChild(enemy);
 
-  enemies.push({element: enemy, x, y, speed: 1});
+  enemies.push({element: enemy, x, y, speed: 0.6}); // inimigos mais lentos
 }
 
 // Movimento inimigos em direção ao jogador (dentro do labirinto)
 function moveEnemies() {
-  enemies.forEach(en => {
+  enemies.forEach((en, i) => {
     let dx = playerPos.x - en.x;
     let dy = playerPos.y - en.y;
     let dist = Math.sqrt(dx*dx + dy*dy);
@@ -63,17 +73,32 @@ function moveEnemies() {
 
       en.element.style.left = en.x + 'px';
       en.element.style.top = en.y + 'px';
+
+      // Se inimigo chegar perto do jogador, tira vida e some
+      if(dist < 20) {
+        playerLife -= 10;
+        updateHealth();
+        maze.removeChild(en.element);
+        enemies.splice(i,1);
+
+        if(playerLife <= 0) {
+          alert("Você morreu! Game Over.");
+          window.location.reload();
+        }
+      }
     }
   });
 }
 
-// Atirar com clique
-game.addEventListener('click', e => {
-  const rect = maze.getBoundingClientRect();
-  const clickX = e.clientX - rect.left;
-  const clickY = e.clientY - rect.top;
+function updateHealth() {
+  healthDisplay.textContent = `Vida: ${playerLife}`;
+}
 
-  let angle = Math.atan2(clickY - playerPos.y, clickX - playerPos.x);
+// Função para criar um tiro
+function shoot() {
+  let dx = mousePos.x - playerPos.x;
+  let dy = mousePos.y - playerPos.y;
+  let angle = Math.atan2(dy, dx);
 
   let bullet = document.createElement('div');
   bullet.classList.add('bullet');
@@ -88,6 +113,32 @@ game.addEventListener('click', e => {
     alive: true,
     life: 0
   });
+}
+
+// Controlar disparo automático enquanto mouse pressionado
+game.addEventListener('mousedown', e => {
+  const rect = maze.getBoundingClientRect();
+  mousePos.x = e.clientX - rect.left;
+  mousePos.y = e.clientY - rect.top;
+  isShooting = true;
+  shoot();
+  if(shootInterval === null) {
+    shootInterval = setInterval(() => {
+      if(isShooting) shoot();
+    }, shootDelay);
+  }
+});
+game.addEventListener('mouseup', e => {
+  isShooting = false;
+  clearInterval(shootInterval);
+  shootInterval = null;
+});
+game.addEventListener('mousemove', e => {
+  if(isShooting) {
+    const rect = maze.getBoundingClientRect();
+    mousePos.x = e.clientX - rect.left;
+    mousePos.y = e.clientY - rect.top;
+  }
 });
 
 // Atualiza movimento e reflexão dos tiros
@@ -144,14 +195,14 @@ function explodeBullet(bullet) {
   });
 }
 
-// Spawn contínuo inimigos
-setInterval(spawnEnemy, 2000);
+// Spawn contínuo inimigos com limite e intervalo maior
+setInterval(spawnEnemy, 3500);
 
-// Loop do jogo
 function gameLoop() {
   moveEnemies();
   updateBullets();
   requestAnimationFrame(gameLoop);
 }
 
+updateHealth();
 gameLoop();
