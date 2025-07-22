@@ -1,3 +1,10 @@
+// Importar variáveis do maze.js
+const cols = window.cols;
+const rows = window.rows;
+const cellSize = window.cellSize;
+const mazeGrid = window.mazeGrid;
+const drawMaze = window.drawMaze;
+
 const game = document.getElementById('game');
 const player = document.getElementById('player');
 const scoreboard = document.getElementById('scoreboard');
@@ -38,7 +45,6 @@ class Enemy {
     const vx = (dx / dist) * this.speed;
     const vy = (dy / dist) * this.speed;
 
-    // Tentativa de mover, checando colisão
     const nextX = this.x + vx;
     const nextY = this.y + vy;
 
@@ -106,10 +112,8 @@ class Bullet {
   }
 }
 
-// Função para checar colisão círculo com paredes do labirinto
 function collideWithWalls(x,y,radius) {
   const walls = [];
-  // Gera segmentos das paredes
   mazeGrid.forEach(cell => {
     const col = cell.col;
     const row = cell.row;
@@ -128,7 +132,6 @@ function collideWithWalls(x,y,radius) {
   return false;
 }
 
-// Colisão círculo-linha
 function circleLineCollision(cx,cy,cr, x1,y1,x2,y2) {
   const dx = x2 - x1;
   const dy = y2 - y1;
@@ -166,7 +169,7 @@ const shootDelay = 200;
 
 function spawnEnemy() {
   if(enemies.length >= 10) return;
-  // Spawn em bordas
+
   let borderCells = mazeGrid.filter(c => c.col === 0 || c.col === cols-1 || c.row === 0 || c.row === rows-1);
   let cell = borderCells[Math.floor(Math.random()*borderCells.length)];
   let x = cell.col * cellSize + cellSize/2;
