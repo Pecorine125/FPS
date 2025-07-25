@@ -31,3 +31,14 @@ body {
   display: block;
   margin-bottom: 5px;
 }
+
+#mira {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 32px;
+  color: white;
+  pointer-events: none;
+  user-select: none;
+}
