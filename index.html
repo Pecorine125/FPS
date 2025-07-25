@@ -6,7 +6,14 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <div id="hud">
+    <span id="vida">Vida: 100</span>
+    <span id="municao">Munição: 10</span>
+  </div>
   <div id="instrucoes">Clique para começar</div>
+
+  <audio id="tiro-som" src="assets/shot.mp3" preload="auto"></audio>
+
   <script src="https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.157.0/examples/js/controls/PointerLockControls.js"></script>
   <script src="script.js"></script>

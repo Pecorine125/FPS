@@ -16,3 +16,18 @@ body {
   cursor: pointer;
   border-radius: 8px;
 }
+
+#hud {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 18px;
+  background: rgba(0,0,0,0.5);
+  padding: 10px 15px;
+  border-radius: 8px;
+}
+
+#hud span {
+  display: block;
+  margin-bottom: 5px;
+}

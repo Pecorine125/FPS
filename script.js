@@ -1,6 +1,11 @@
 let scene, camera, renderer, controls;
 let bullets = [];
 let enemies = [];
+let vida = 100;
+let municao = 10;
+let vidaSpan = document.getElementById('vida');
+let municaoSpan = document.getElementById('municao');
+let somTiro = document.getElementById('tiro-som');
 
 init();
 
@@ -12,12 +17,10 @@ function init() {
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
 
-  // Iluminação
   const light = new THREE.DirectionalLight(0xffffff, 1);
   light.position.set(1, 1, 1).normalize();
   scene.add(light);
 
-  // Controles
   controls = new THREE.PointerLockControls(camera, document.body);
   document.getElementById('instrucoes').addEventListener('click', () => {
     controls.lock();
@@ -30,7 +33,6 @@ function init() {
   });
   scene.add(controls.getObject());
 
-  // Chão
   const floor = new THREE.Mesh(
     new THREE.PlaneGeometry(100, 100),
     new THREE.MeshStandardMaterial({ color: 0x222222 })
@@ -38,25 +40,19 @@ function init() {
   floor.rotation.x = -Math.PI / 2;
   scene.add(floor);
 
-  // Inimigos
   for (let i = 0; i < 5; i++) {
-    const enemy = new THREE.Mesh(
-      new THREE.BoxGeometry(1, 1, 1),
-      new THREE.MeshStandardMaterial({ color: 0xff0000 })
-    );
-    enemy.position.set(Math.random() * 20 - 10, 0.5, -10 - i * 5);
-    scene.add(enemy);
-    enemies.push(enemy);
+    spawnEnemy();
   }
 
-  // Movimento
   const keys = {};
   document.addEventListener('keydown', e => keys[e.code] = true);
   document.addEventListener('keyup', e => keys[e.code] = false);
 
-  // Atirar
   document.addEventListener('click', () => {
-    if (!controls.isLocked) return;
+    if (!controls.isLocked || municao <= 0) return;
+
+    somTiro.currentTime = 0;
+    somTiro.play();
 
     const bullet = new THREE.Mesh(
       new THREE.SphereGeometry(0.1),
@@ -66,12 +62,14 @@ function init() {
     bullet.direction = camera.getWorldDirection(new THREE.Vector3());
     scene.add(bullet);
     bullets.push(bullet);
+
+    municao--;
+    updateHUD();
   });
 
   function animate() {
     requestAnimationFrame(animate);
 
-    // Movimento WASD
     const speed = 0.1;
     const direction = new THREE.Vector3();
     if (keys['KeyW']) direction.z -= 1;
@@ -82,14 +80,13 @@ function init() {
     controls.moveRight(direction.x * speed);
     controls.moveForward(direction.z * speed);
 
-    // Atualizar balas
     bullets.forEach((bullet, index) => {
       bullet.position.add(bullet.direction.clone().multiplyScalar(0.5));
 
-      // Verifica colisão com inimigos
       enemies.forEach((enemy, i) => {
         if (enemy && bullet.position.distanceTo(enemy.position) < 0.6) {
-          scene.remove(enemy);
+          enemy.material.color.set(0x00ff00); // animação (cor verde atingido)
+          setTimeout(() => scene.remove(enemy), 300); // remover após "animação"
           enemies[i] = null;
           scene.remove(bullet);
           bullets[index] = null;
@@ -104,4 +101,19 @@ function init() {
   }
 
   animate();
+}
+
+function spawnEnemy() {
+  const enemy = new THREE.Mesh(
+    new THREE.BoxGeometry(1, 1, 1),
+    new THREE.MeshStandardMaterial({ color: 0xff0000 })
+  );
+  enemy.position.set(Math.random() * 20 - 10, 0.5, -10 - Math.random() * 20);
+  scene.add(enemy);
+  enemies.push(enemy);
+}
+
+function updateHUD() {
+  vidaSpan.textContent = `Vida: ${vida}`;
+  municaoSpan.textContent = `Munição: ${municao}`;
 }
