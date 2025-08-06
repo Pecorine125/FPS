@@ -1,22 +1,16 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>FPS com Three.js</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo 3D de Tiro</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="hud">
-    <span id="vida">Vida: 100</span>
-    <span id="municao">Munição: 10</span>
-  </div>
-  <div id="instrucoes">Clique para começar</div>
-  <div id="mira">+</div>
+    <h1>Jogo 3D de Tiro</h1>
+    <canvas id="gameCanvas"></canvas>
 
-  <audio id="tiro-som" src="assets/shot.mp3" preload="auto"></audio>
-  <audio id="recarga-som" src="assets/recarga.mp3" preload="auto"></audio>
-
-  <!-- Usa versão ES Module moderna -->
-  <script type="module" src="script.js"></script>
+    <script src="libs/three.min.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
