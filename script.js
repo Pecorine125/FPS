@@ -15,11 +15,9 @@ const playerSpeed = 4;
 
 let isReloading = false;
 
-// Sons embutidos base64:
-// Som de tiro (pequeno "pop" sintético)
-const shootSound = new Audio("data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAgD4AAAB9AAACABAAZGF0YQAAAAA=");
-// Som de recarga (curto beep)
-const reloadSound = new Audio("data:audio/wav;base64,UklGRjwAAABXQVZFZm10IBAAAAABAAEAgD4AAAB9AAACABAAZGF0YQAAAAA=");
+// Sons locais (caminhos relativos)
+const shootSound = new Audio("assets/shot.mp3");
+const reloadSound = new Audio("assets/recarga.mp3");
 
 // Movimento do jogador
 window.addEventListener('keydown', (e) => {
@@ -63,7 +61,7 @@ function updatePlayer() {
   player.style.backgroundColor = moved ? '#0af' : '#055';
 }
 
-// Cria um alvo fixo em posições pré-definidas
+// Cria alvos fixos em posições pré-definidas
 const targetsPositions = [
   {x: 100, y: 100},
   {x: 300, y: 150},
