@@ -15,7 +15,7 @@ const playerSpeed = 4;
 
 let isReloading = false;
 
-// Sons embutidos base64:  
+// Sons embutidos base64:
 // Som de tiro (pequeno "pop" sintético)
 const shootSound = new Audio("data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAgD4AAAB9AAACABAAZGF0YQAAAAA=");
 // Som de recarga (curto beep)
