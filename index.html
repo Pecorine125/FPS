@@ -2,23 +2,14 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>FPS Simples com Som Local</title>
+<title>FPS 3D Básico</title>
 <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div id="game">
-    <div id="player"></div>
-    <div id="crosshair"></div>
-    <div id="hud">
-      Vida: <span id="health">100</span> |
-      Munição: <span id="ammo">10</span>
-    </div>
-    <div id="reloadBarContainer">
-      <div id="reloadBar"></div>
-    </div>
-  </div>
+  <div id="instructions">Clique para começar (WASD + mouse para mover)</div>
 
+  <script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.152.2/examples/js/controls/PointerLockControls.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
