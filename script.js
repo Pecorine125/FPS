@@ -1,161 +1,143 @@
-const game = document.getElementById('game');
-const player = document.getElementById('player');
-const healthEl = document.getElementById('health');
-const ammoEl = document.getElementById('ammo');
-const reloadBarContainer = document.getElementById('reloadBarContainer');
-const reloadBar = document.getElementById('reloadBar');
+let camera, scene, renderer, controls;
+let moveForward = false, moveBackward = false, moveLeft = false, moveRight = false;
+let velocity = new THREE.Vector3();
+let direction = new THREE.Vector3();
+let prevTime = performance.now();
 
-let health = 100;
-let ammo = 10;
-const maxAmmo = 10;
+init();
+animate();
 
-let keysPressed = {};
-let playerPos = { x: window.innerWidth/2, y: window.innerHeight/2 };
-const playerSpeed = 4;
+function init() {
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x222222);
 
-let isReloading = false;
+  // Luz
+  const light = new THREE.HemisphereLight(0xffffff, 0x444444);
+  light.position.set(0, 200, 0);
+  scene.add(light);
 
-// Sons locais (caminhos relativos)
-const shootSound = new Audio("assets/shot.mp3");
-const reloadSound = new Audio("assets/recarga.mp3");
+  const dirLight = new THREE.DirectionalLight(0xffffff);
+  dirLight.position.set(0, 200, 100);
+  scene.add(dirLight);
 
-// Movimento do jogador
-window.addEventListener('keydown', (e) => {
-  keysPressed[e.key.toLowerCase()] = true;
-});
+  // Camera
+  camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
 
-window.addEventListener('keyup', (e) => {
-  keysPressed[e.key.toLowerCase()] = false;
-});
+  // Renderer
+  renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  document.body.appendChild(renderer.domElement);
 
-function updatePlayer() {
-  if (isReloading) return;
+  // Controles FPS
+  controls = new THREE.PointerLockControls(camera, document.body);
 
-  let moved = false;
-
-  if (keysPressed['w'] || keysPressed['arrowup']) {
-    playerPos.y -= playerSpeed;
-    moved = true;
-  }
-  if (keysPressed['s'] || keysPressed['arrowdown']) {
-    playerPos.y += playerSpeed;
-    moved = true;
-  }
-  if (keysPressed['a'] || keysPressed['arrowleft']) {
-    playerPos.x -= playerSpeed;
-    moved = true;
-  }
-  if (keysPressed['d'] || keysPressed['arrowright']) {
-    playerPos.x += playerSpeed;
-    moved = true;
-  }
-
-  // Limites da tela
-  playerPos.x = Math.min(Math.max(20, playerPos.x), window.innerWidth - 20);
-  playerPos.y = Math.min(Math.max(20, playerPos.y), window.innerHeight - 20);
-
-  player.style.left = playerPos.x + 'px';
-  player.style.top = playerPos.y + 'px';
-
-  // Animação simples: muda cor se estiver andando
-  player.style.backgroundColor = moved ? '#0af' : '#055';
-}
-
-// Cria alvos fixos em posições pré-definidas
-const targetsPositions = [
-  {x: 100, y: 100},
-  {x: 300, y: 150},
-  {x: 600, y: 400},
-  {x: 900, y: 250},
-  {x: 1200, y: 300},
-];
-
-function createTargets() {
-  targetsPositions.forEach(pos => {
-    const target = document.createElement('div');
-    target.classList.add('target');
-    target.style.left = pos.x + 'px';
-    target.style.top = pos.y + 'px';
-
-    game.appendChild(target);
-
-    target.addEventListener('click', () => {
-      if (isReloading) return;
-      if (ammo <= 0) return;
-
-      ammo--;
-      ammoEl.textContent = ammo;
-      shootSound.currentTime = 0;
-      shootSound.play();
-
-      target.classList.add('hit');
-      setTimeout(() => {
-        target.classList.remove('hit');
-      }, 200);
-
-      if (ammo === 0) {
-        startReload();
-      }
-    });
+  const instructions = document.getElementById('instructions');
+  instructions.addEventListener('click', () => {
+    controls.lock();
   });
+
+  controls.addEventListener('lock', () => {
+    instructions.style.display = 'none';
+  });
+
+  controls.addEventListener('unlock', () => {
+    instructions.style.display = '';
+  });
+
+  scene.add(controls.getObject());
+
+  // Piso
+  const floorGeometry = new THREE.PlaneGeometry(1000, 1000);
+  const floorMaterial = new THREE.MeshPhongMaterial({ color: 0x555555 });
+  const floor = new THREE.Mesh(floorGeometry, floorMaterial);
+  floor.rotation.x = -Math.PI / 2;
+  floor.position.y = 0;
+  scene.add(floor);
+
+  // Inimigo (cubo vermelho)
+  const enemyGeometry = new THREE.BoxGeometry(10, 10, 10);
+  const enemyMaterial = new THREE.MeshPhongMaterial({ color: 0xff0000 });
+  const enemy = new THREE.Mesh(enemyGeometry, enemyMaterial);
+  enemy.position.set(50, 5, -50);
+  scene.add(enemy);
+
+  // Eventos teclado
+  document.addEventListener('keydown', onKeyDown);
+  document.addEventListener('keyup', onKeyUp);
+
+  window.addEventListener('resize', onWindowResize);
 }
 
-function startReload() {
-  if (isReloading) return;
-  isReloading = true;
-  reloadBarContainer.style.display = 'block';
-  reloadBar.style.width = '0%';
-
-  reloadSound.currentTime = 0;
-  reloadSound.play();
-
-  let progress = 0;
-  const reloadDuration = 3000; // 3 segundos recarga
-  const intervalTime = 30; // ms
-  const step = intervalTime / reloadDuration * 100;
-
-  const interval = setInterval(() => {
-    progress += step;
-    reloadBar.style.width = progress + '%';
-
-    if (progress >= 100) {
-      clearInterval(interval);
-      ammo = maxAmmo;
-      ammoEl.textContent = ammo;
-      isReloading = false;
-      reloadBarContainer.style.display = 'none';
-    }
-  }, intervalTime);
+function onWindowResize() {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-// Reset do jogo
-function resetGame() {
-  health = 100;
-  ammo = maxAmmo;
-  healthEl.textContent = health;
-  ammoEl.textContent = ammo;
-  isReloading = false;
-  reloadBarContainer.style.display = 'none';
-}
-
-// Game loop
-function gameLoop() {
-  updatePlayer();
-  requestAnimationFrame(gameLoop);
-}
-
-resetGame();
-createTargets();
-gameLoop();
-
-// Previne seleção de texto
-game.addEventListener('mousedown', e => e.preventDefault());
-
-// Recarregar manual com tecla R
-window.addEventListener('keydown', e => {
-  if (e.key.toLowerCase() === 'r') {
-    if (!isReloading && ammo < maxAmmo) {
-      startReload();
-    }
+function onKeyDown(event) {
+  switch (event.code) {
+    case 'ArrowUp':
+    case 'KeyW':
+      moveForward = true;
+      break;
+    case 'ArrowLeft':
+    case 'KeyA':
+      moveLeft = true;
+      break;
+    case 'ArrowDown':
+    case 'KeyS':
+      moveBackward = true;
+      break;
+    case 'ArrowRight':
+    case 'KeyD':
+      moveRight = true;
+      break;
   }
-});
+}
+
+function onKeyUp(event) {
+  switch (event.code) {
+    case 'ArrowUp':
+    case 'KeyW':
+      moveForward = false;
+      break;
+    case 'ArrowLeft':
+    case 'KeyA':
+      moveLeft = false;
+      break;
+    case 'ArrowDown':
+    case 'KeyS':
+      moveBackward = false;
+      break;
+    case 'ArrowRight':
+    case 'KeyD':
+      moveRight = false;
+      break;
+  }
+}
+
+function animate() {
+  requestAnimationFrame(animate);
+
+  if (controls.isLocked === true) {
+    const time = performance.now();
+    const delta = (time - prevTime) / 1000;
+
+    velocity.x -= velocity.x * 10.0 * delta;
+    velocity.z -= velocity.z * 10.0 * delta;
+
+    direction.z = Number(moveForward) - Number(moveBackward);
+    direction.x = Number(moveRight) - Number(moveLeft);
+    direction.normalize();
+
+    if (moveForward || moveBackward) velocity.z -= direction.z * 400.0 * delta;
+    if (moveLeft || moveRight) velocity.x -= direction.x * 400.0 * delta;
+
+    controls.moveRight(-velocity.x * delta);
+    controls.moveForward(-velocity.z * delta);
+
+    prevTime = time;
+  }
+
+  renderer.render(scene, camera);
+}
