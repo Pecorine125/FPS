@@ -1,3 +1,6 @@
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.module.js';
+import { PointerLockControls } from 'https://cdn.jsdelivr.net/npm/three@0.152.2/examples/jsm/controls/PointerLockControls.js';
+
 let camera, scene, renderer, controls;
 let moveForward = false, moveBackward = false, moveLeft = false, moveRight = false;
 let velocity = new THREE.Vector3();
@@ -29,7 +32,7 @@ function init() {
   document.body.appendChild(renderer.domElement);
 
   // Controles FPS
-  controls = new THREE.PointerLockControls(camera, document.body);
+  controls = new PointerLockControls(camera, document.body);
 
   const instructions = document.getElementById('instructions');
   instructions.addEventListener('click', () => {
@@ -141,3 +144,4 @@ function animate() {
 
   renderer.render(scene, camera);
 }
+
