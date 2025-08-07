@@ -1,16 +1,24 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jogo 3D de Tiro</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>FPS Simples com Som Embutido</title>
+<link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <h1>Jogo 3D de Tiro</h1>
-    <canvas id="gameCanvas"></canvas>
+  <div id="game">
+    <div id="player"></div>
+    <div id="crosshair"></div>
+    <div id="hud">
+      Vida: <span id="health">100</span> |
+      Munição: <span id="ammo">10</span>
+    </div>
+    <div id="reloadBarContainer">
+      <div id="reloadBar"></div>
+    </div>
+  </div>
 
-    <script src="libs/three.min.js"></script>
-    <script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
