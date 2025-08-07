@@ -14,7 +14,6 @@ function init() {
   scene = new THREE.Scene();
   scene.background = new THREE.Color(0x222222);
 
-  // Luz
   const light = new THREE.HemisphereLight(0xffffff, 0x444444);
   light.position.set(0, 200, 0);
   scene.add(light);
@@ -23,15 +22,12 @@ function init() {
   dirLight.position.set(0, 200, 100);
   scene.add(dirLight);
 
-  // Camera
   camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
 
-  // Renderer
   renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
 
-  // Controles FPS
   controls = new PointerLockControls(camera, document.body);
 
   const instructions = document.getElementById('instructions');
@@ -49,7 +45,6 @@ function init() {
 
   scene.add(controls.getObject());
 
-  // Piso
   const floorGeometry = new THREE.PlaneGeometry(1000, 1000);
   const floorMaterial = new THREE.MeshPhongMaterial({ color: 0x555555 });
   const floor = new THREE.Mesh(floorGeometry, floorMaterial);
@@ -57,14 +52,12 @@ function init() {
   floor.position.y = 0;
   scene.add(floor);
 
-  // Inimigo (cubo vermelho)
   const enemyGeometry = new THREE.BoxGeometry(10, 10, 10);
   const enemyMaterial = new THREE.MeshPhongMaterial({ color: 0xff0000 });
   const enemy = new THREE.Mesh(enemyGeometry, enemyMaterial);
   enemy.position.set(50, 5, -50);
   scene.add(enemy);
 
-  // Eventos teclado
   document.addEventListener('keydown', onKeyDown);
   document.addEventListener('keyup', onKeyUp);
 
@@ -144,4 +137,3 @@ function animate() {
 
   renderer.render(scene, camera);
 }
-
