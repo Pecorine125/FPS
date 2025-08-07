@@ -3,11 +3,23 @@
 <head>
 <meta charset="UTF-8" />
 <title>FPS 3D com módulos</title>
-<style> body { margin:0; overflow:hidden; } canvas { display:block; } </style>
+<style>
+  body { margin: 0; overflow: hidden; background: #222; }
+  canvas { display: block; }
+  #instructions {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    color: white;
+    top: 40%;
+    font-family: Arial, sans-serif;
+    font-size: 24px;
+    cursor: pointer;
+  }
+</style>
 </head>
 <body>
-<div id="instructions">Clique para começar</div>
-
-<script type="module" src="script.js"></script>
+  <div id="instructions">Clique para começar (WASD + mouse para mover)</div>
+  <script type="module" src="script.js"></script>
 </body>
 </html>
