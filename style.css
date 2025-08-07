@@ -1,103 +1,18 @@
-body, html {
-  margin: 0; padding: 0; height: 100%; overflow: hidden;
+body {
+  margin: 0;
+  overflow: hidden;
   background: #222;
-  font-family: Arial, sans-serif;
+}
+canvas {
+  display: block;
+}
+#instructions {
+  position: absolute;
+  width: 100%;
+  text-align: center;
   color: white;
-  user-select: none;
-}
-
-#game {
-  position: relative;
-  width: 100vw;
-  height: 100vh;
-  background: linear-gradient(to bottom, #555, #111);
-  cursor: crosshair;
-  overflow: hidden;
-}
-
-#player {
-  position: absolute;
-  width: 40px;
-  height: 40px;
-  background: #0af;
-  border-radius: 50%;
-  left: 50%;
-  top: 50%;
-  margin-left: -20px;
-  margin-top: -20px;
-  transition: background 0.2s;
-}
-
-/* Mira no centro da tela */
-#crosshair {
-  position: absolute;
-  top: 50%; left: 50%;
-  width: 20px; height: 20px;
-  margin-left: -10px; margin-top: -10px;
-  pointer-events: none;
-  z-index: 10;
-}
-#crosshair:before, #crosshair:after {
-  content: '';
-  position: absolute;
-  background: white;
-}
-#crosshair:before {
-  left: 50%; top: 0;
-  width: 2px; height: 20px;
-  margin-left: -1px;
-}
-#crosshair:after {
-  top: 50%; left: 0;
-  width: 20px; height: 2px;
-  margin-top: -1px;
-}
-
-/* HUD */
-#hud {
-  position: absolute;
-  top: 10px; left: 10px;
-  font-size: 18px;
-  background: rgba(0,0,0,0.5);
-  padding: 8px 12px;
-  border-radius: 8px;
-  z-index: 20;
-}
-
-/* Barra de recarga */
-#reloadBarContainer {
-  position: absolute;
-  bottom: 10px; left: 50%;
-  transform: translateX(-50%);
-  width: 200px;
-  height: 20px;
-  background: rgba(255,255,255,0.2);
-  border-radius: 10px;
-  overflow: hidden;
-  display: none;
-  z-index: 20;
-}
-
-#reloadBar {
-  height: 100%;
-  background: #0af;
-  width: 0%;
-  transition: width 0.03s linear;
-}
-
-/* Alvo */
-.target {
-  position: absolute;
-  width: 50px;
-  height: 50px;
-  background: red;
-  border-radius: 50%;
-  border: 3px solid white;
+  top: 40%;
+  font-family: Arial, sans-serif;
+  font-size: 24px;
   cursor: pointer;
-  user-select: none;
-}
-
-.hit {
-  background: darkred;
-  border-color: yellow;
 }
